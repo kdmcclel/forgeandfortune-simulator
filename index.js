@@ -8,7 +8,7 @@ program.version('0.0.1');
 
 program
     .requiredOption('-d, --dungeon-id <id>', 'dungeon id to test')
-    .option('-f, --floor <int>', 'floor to start on', 0, parseInt)
+    .option('-f, --floor <int>', 'floor to start on', 1, parseInt)
     .option('-m, --max-floor', 'retain max floor')
     .requiredOption('-l, --level <int>', 'item level to set', 9, parseInt)
     .requiredOption('-s, --sharpness <int>', 'sharpness to set', 10, parseInt)
@@ -104,7 +104,6 @@ async function run() {
             }
         }
     }
-    
     console.log(parties.length);
     try {
         let results = [];
