@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 const os = require('os');
+const progress = require('cli-progress');
 const { Worker } = require('worker_threads');
 const { program } = require('commander');
 
+const bar = new progress.SingleBar({}, progress.Presets.shades_classic);
 const cores = os.cpus().length;
 program.version('0.0.1');
 
@@ -104,15 +106,19 @@ async function run() {
             }
         }
     }
-    console.log(parties.length);
+
+    bar.start(parties.length, 0);
     try {
         let results = [];
+        let current = 0;
         const response = await Promise.all(chunk(parties, parties.length / cores).map((sets, i) => {
             return new Promise((resolve, reject) => {
-                console.log(sets.length);
                 const worker = new Worker('./worker.js', {workerData: {...workerData, parties: sets}});
                 worker.on('message', (data) => {
-                    if(data.status) console.log(`${i} | ${sets.length} | ${data.status}`);
+                    if(data.status) { 
+                        current+= 1000;
+                        bar.update(current);
+                    }
                     if(data.results) resolve(data.results);
                 });;
                 worker.on('error', reject);
@@ -123,6 +129,7 @@ async function run() {
                 })
             });
         }));
+        bar.stop();
         results = response.flat();
         console.log(results.filter(r => r.status === 'Success').sort((a,b) => {
             if(a.floor !== b.floor) return b.floor - a.floor;
