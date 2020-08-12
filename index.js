@@ -129,7 +129,6 @@ async function run() {
                 })
             });
         }));
-        bar.stop();
         results = response.flat();
         console.log(results.filter(r => r.status === 'Success').sort((a,b) => {
             if(a.floor !== b.floor) return b.floor - a.floor;
@@ -138,6 +137,7 @@ async function run() {
     } catch (err) {
         console.log(err);
     }
+    bar.stop();
     console.timeEnd('run');
 }
 
