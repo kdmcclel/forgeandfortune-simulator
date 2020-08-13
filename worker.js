@@ -474,7 +474,6 @@ class SkillManager {
             }
         };
         this.skillEffects.SM202 = (round) => {
-            var originalDmg = combatParams.power;
             const targets = round.getTarget(TargetType.first, SideType.enemies);
             const power = round.power;
             for(const target of targets) {
