@@ -10,9 +10,10 @@ program.version('0.0.1');
 
 program
     .requiredOption('-d, --dungeon-id <id>', 'dungeon id to test')
-    .option('-f, --floor <int>', 'floor to start on', 1, parseInt)
+    .option('-f, --floor <int>', 'floor to start on', 0, parseInt)
     .option('-m, --max-floor', 'retain max floor')
-    .requiredOption('-l, --level <int>', 'item level to set', 9, parseInt)
+    .requiredOption('-r, --rarity <int>', 'item rarity', 3, parseInt)
+    .requiredOption('-t, --tier <int>', 'item tier level', 10, parseInt)
     .requiredOption('-s, --sharpness <int>', 'sharpness to set', 10, parseInt)
 
 program.parse(process.argv);
@@ -71,8 +72,8 @@ const transforms = [
     ['pow','pow','pow','hp','pow','pow','pow']
 ];
 
-const {dungeonId, floor, maxFloor, level, sharpness} = program;
-const workerData = {dungeonId, floor, maxFloor, level, sharpness};
+const {dungeonId, floor, maxFloor, rarity, tier, sharpness} = program;
+const workerData = {dungeonId, floor, maxFloor, rarity, tier, sharpness};
 
 async function run() {
     console.time('run');
@@ -129,7 +130,6 @@ async function run() {
                 })
             });
         }));
-        bar.stop();
         results = response.flat();
         console.log(results.filter(r => r.status === 'Success').sort((a,b) => {
             if(a.floor !== b.floor) return b.floor - a.floor;
@@ -138,6 +138,7 @@ async function run() {
     } catch (err) {
         console.log(err);
     }
+    bar.stop();
     console.timeEnd('run');
 }
 

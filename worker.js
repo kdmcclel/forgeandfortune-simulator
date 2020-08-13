@@ -1950,10 +1950,10 @@ class HeroManager {
     swapPlaybook(id, pId) {
         this.byId(id).swapPlaybook(pId);
     }
-    preloadGear(lvl, sharp) {
+    preloadGear(tier, rarity, sharp) {
         for(const hero of this.heroes) {
             for(const slot of hero.gearSlots) {
-                slot.gear = new ItemContainer(recipeList.byLevelType(lvl, slot.type).id, 3);
+                slot.gear = new ItemContainer(recipeList.byLevelType(tier, slot.type).id, rarity);
                 if(slot.type !== 'Trinkets') slot.gear.sharp = sharp;
             }
         }
@@ -2441,9 +2441,9 @@ const mobList = new MobManager(mobData);
 const dungeonList = new DungeonManager(dungeonData);
 const combatManager = new CombatManager();
 
-const {dungeonId, floor, maxFloor, level, sharpness, parties} = workerData;
+const {dungeonId, floor, maxFloor, rarity, tier, sharpness, parties} = workerData;
 
-heroesList.preloadGear(level, sharpness);
+heroesList.preloadGear(tier, rarity, sharpness);
 for(const hero of heroesList.heroes) {
     for(const slot of hero.gearSlots) {
         if(slot.type === 'Trinkets') continue;
